@@ -115,7 +115,7 @@ class Game{
                 area.innerHTML = '';
                 let markup = `
                 <div class="winMess">
-                    <img src="/youwin.png" alt="" class="win">
+                    <img src="./youwin.png" alt="" class="win">
                     <div class="count">You have done it in ${count} steps!</div>
                 </div>
                 `
