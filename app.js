@@ -40,6 +40,8 @@ class Game{
         Not sure this will produce solvable puzzle
         Guess you need to take solved state and do real moves
         (swap with empty tile)
+
+        First move must be performed with tile 15 or 12 and so on...
     */
     shuffleArray() {//метод случайных перемещений
         for (let i = this.array.length - 1; i > 0; i--) {
