@@ -13,22 +13,26 @@ const area = document.querySelector('.area');
 const reset = document.querySelector('.reset');
 let count = 0;//количество шагов
 
-class Game{
-    constructor(array){
+class Game {
+    constructor(array) {
         this.array = array;
     }
 
-    
+
     shuffleArray() {//метод случайных перемещений
-        for (let i = this.array.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let temp = this.array[i];
-            this.array[i] = this.array[j];
-            this.array[j] = temp;
-        }
+        // for (let i = this.array.length - 1; i > 0; i--) {
+        //     let j = Math.floor(Math.random() * (i + 1));
+        //     let temp = this.array[i];
+        //     this.array[i] = this.array[j];
+        //     this.array[j] = temp;
+        // }
+        for(let i = 0; i<1000; i++){
+            this.moveTile(Math.floor(Math.random(1)*15));
+        };
+        count = 0;
     }
-    createGame(arr){
-        
+    createGame(arr) {
+
         area.innerHTML = '';
         const markup = `
         <div class="field">
@@ -49,87 +53,81 @@ class Game{
             <div class="tile" id ="14">${arr[14]}</div>
             <div class="tile" id ="15">${arr[15]}</div>    
         </div>`
-         
+
         area.insertAdjacentHTML('afterbegin', markup);
-        
+
     }
-    
-    resetGame(){
-        area.innerHTML = '';
+
+    resetGame() {
+        
         count = 0;
         this.shuffleArray();
         this.createGame(this.array);
     }
 
-    
-    moveTile(id){
+
+    moveTile(id) {
         let newArr = this.array;
-        
-        if(newArr[id+1] === ' ' && !((id+1)%4 == 0)){
-            
-            let temp1 = newArr[id+1];
-            newArr[id+1] = newArr[id];
-            newArr[id] = temp1;
-            count++;
-            this.createGame(newArr);
 
-        } else if(newArr[id-1] === ' ' && !(id%4 == 0)){
+        if (newArr[id + 1] === ' ' && !((id + 1) % 4 == 0)) {
 
-            let temp1 = newArr[id-1];
-            newArr[id-1] = newArr[id];
-            newArr[id] = temp1;
-            count++;
-            this.createGame(newArr);
+            this.checkMove(1, newArr, id);
 
-        }else if(newArr[id+4] === ' ' ){
+        } else if (newArr[id - 1] === ' ' && !(id % 4 == 0)) {
 
-            let temp1 = newArr[id+4];
-            newArr[id+4] = newArr[id];
-            newArr[id] = temp1;
-            count++;
-            this.createGame(newArr);
-        
-        } else if(newArr[id-4] === ' '){
+            this.checkMove(-1, newArr, id);
 
-            let temp1 = newArr[id-4];
-            newArr[id-4] = newArr[id];
-            newArr[id] = temp1;
-            count++;
-            this.createGame(newArr);
-        
-        } 
-        
+        } else if (newArr[id + 4] === ' ') {
+
+            this.checkMove(4, newArr, id);
+
+        } else if (newArr[id - 4] === ' ') {
+
+            this.checkMove(-4, newArr, id);
+
+        }
+
         this.winGame(newArr);
-           
+
+
+    }
+    checkMove(number, arr, id) {
+        
+
+            let temp1 = arr[id + number];
+            arr[id + number] = arr[id];
+            arr[id] = temp1;
+            count++;
+            this.createGame(arr);
         
     }
-    winGame(arr){
+    winGame(arr) {
         let winLine1 = '123456789101112131415 ';//разные варианты победы
         let winLine2 = '159132610143711154812 ';
         let winLine3 = ' 123456789101112131415';
         let check = arr.join('');
-        
-        
-        if((check === winLine1 || check === winLine2 || check === winLine3) && count !==0){
-            
-                area.innerHTML = '';
-                let markup = `
+
+
+        if ((check === winLine1 || check === winLine2 || check === winLine3) && count !== 0) {
+
+            area.innerHTML = '';
+            let markup = `
                 <div class="winMess">
                     <img src="./youwin.png" alt="" class="win">
                     <div class="count">You have done it in ${count} steps!</div>
                 </div>
                 `
-                area.insertAdjacentHTML('afterbegin', markup);
-                
+            area.insertAdjacentHTML('afterbegin', markup);
+
         }
-        
+
     }
 }
 const startGame = new Game(arr);//инициализируем новый прототип
 startGame.createGame(arr);//можно добавить на событие load
-reset.addEventListener('click', (e)=>{
+reset.addEventListener('click', (e) => {
     startGame.resetGame();
 });
-area.addEventListener('click', (e)=>{ 
+area.addEventListener('click', (e) => {
     startGame.moveTile(parseInt(e.target.id));//получаем значение id по клику
 });
